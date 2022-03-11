@@ -1,0 +1,11 @@
+/build
+/dist
+/MANIFEST
+/*.egg-info
+/openslide/_convert*.so
+*.pyc
+tests/
+doc/
+examples/deepzoom/newimgs
+examples/deepzoom/OneDrive_1_3-9-2022.zip
+examples/deepzoom/.vscode/launch.json
