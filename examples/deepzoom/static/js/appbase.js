@@ -19,7 +19,6 @@ var tmcpoints= {
         });
     },
     init: function(options){ 
-
 		tmcpoints.emptyViewers({});
 	    //tmcpoints.fixed=options.fixed;
 		//tmcpoints.moving=options.moving;
@@ -30,12 +29,10 @@ var tmcpoints= {
         var moving_viewer;
         //default icon stroke color
         var strokeColor="#234";
-
         if(tmcpoints.fixed_file==null || tmcpoints.moving_file==null){
             alert("No images chosen.");
             return;
         }  
-
         //Initialize OSD with options (Options are written at the end of this file)
         fixed_viewer = OpenSeadragon(tmcpoints.options_fixed);
         //open the DZI xml file pointing to the tiles
@@ -72,7 +69,6 @@ var tmcpoints= {
                 if(document.getElementById("syncpan").checked){
                     var f_center = fixed_viewer.viewport.getCenter();
                     moving_viewer.viewport.panTo(f_center, true);
-                    //console.log("else");
                 }
             }
         };
@@ -110,6 +106,7 @@ var tmcpoints= {
         navigatorSizeRatio: 1,
         wrapHorizontal: false,
         showNavigator: false,
+        showNavigationControl: false,
         navigatorPosition: "BOTTOM_LEFT",
         navigatorSizeRatio: 0.25,
         animationTime: 0.0,
@@ -134,6 +131,7 @@ var tmcpoints= {
         maxZoomPixelRatio: 1,
         zoomPerClick: 1.0,
         constrainDuringPan: true,
-        visibilityRatio: 1
+        visibilityRatio: 1,
+        showNavigationControl: false
     }
 }
