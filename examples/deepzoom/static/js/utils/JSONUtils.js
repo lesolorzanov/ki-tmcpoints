@@ -51,8 +51,23 @@ JSONUtils.downloadJSON = function () {
     var a = document.getElementById("hiddena");
     var a = document.createElement("a");
     var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(JSONUtils.dataToJSON(), 0, 4));
+    var namefile="";
+
+    var name1=document.getElementById("thimg1") || "";
+    var name2=document.getElementById("thimg2") || "";
+
+    if(name1)
+        namefile=namefile+document.getElementById("thimg1").innerText;
+    if(name2)
+        namefile=namefile+document.getElementById("thimg2").innerText;
+
+    if(namefile.length==0)
+        namefile="data.json"
+    else
+        namefile=namefile+".json"
+
     a.setAttribute("href", "data:" + data);
-    a.setAttribute("download", "data.json");
+    a.setAttribute("download", namefile);
     a.setAttribute('visibility', 'hidden');
     a.setAttribute('display', 'none');
     a.click();
