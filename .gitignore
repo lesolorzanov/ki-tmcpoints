@@ -9,3 +9,5 @@ doc/
 examples/deepzoom/newimgs
 examples/deepzoom/OneDrive_1_3-9-2022.zip
 examples/deepzoom/.vscode/launch.json
+newimgs
+.vscode/launch.json

@@ -59,10 +59,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('DEEPZOOM_MULTISERVER_SETTINGS', silent=True)
 slides_context={}
-slides_context["slides"]=[]
-slides_context["slide_names"]=[]
-slides_context["slide_formats"]=[]
-
+slides_context={"slides":[], "slide_names":[], "slide_formats":[]}
 
 class _SlideCache:
     def __init__(self, cache_size, dz_opts):
@@ -142,28 +139,40 @@ def _setup():
     for i in range(2):
         slide=_SlideCache(app.config['SLIDE_CACHE_SIZE'], opts)
         slides_context["slide_names"].append( "" )
+        slides_context["slide_formats"].append( "" )
         slides_context["slides"].append( slide )
 
 
 def _get_slide(path, i=None, name=None):
     path = os.path.abspath(os.path.join(app.basedir, path))
+    abort_flag=True
+    inname=name
+    inpath=path
     if not path.startswith(app.basedir + os.path.sep):
         # Directory traversal
         abort(404)
-    if not os.path.exists(path):
-        abort(404)
+    if (not os.path.exists(path)):
+        for i in range(len(slides_context["slide_formats"])):
+            if os.path.exists(path+"."+slides_context['slide_formats'][i]):
+                abort_flag=False
+                inname=name+"."+slides_context['slide_formats'][i]
+                inpath=path+"."+slides_context['slide_formats'][i]
+                continue
+        if abort_flag:
+            abort(404)            
     try:
         if (i is not None) and (i<=len(slides_context["slides"])):
             acache=slides_context["slides"][i]
-            slide = acache.get(path)
-            slides_context["slide_names"][i]=str(os.path.normpath(path))
-            slides_context["slide_formats"][i]=_removeFormat(path)[1]
+            slide = acache.get(inpath)
+            info=_removeFormat(inpath)
+            slides_context["slide_names"][i]=info[0]
+            slides_context["slide_formats"][i]=info[1]
             return slide
-        elif name is not None:
+        elif inname is not None:
             for n in range(len(slides_context["slides"])):
-                if slides_context["slides_names"][n]==name:
+                if inname in slides_context["slide_names"][n]:
                     acache=slides_context["slides"][n]
-                    slide = acache.get(path)
+                    slide = acache.get(inpath)
                     return slide
 
     except OpenSlideError:
@@ -186,6 +195,9 @@ def index():
 
 @app.route('/<pathscombined>')
 def slide(pathscombined):
+    
+    if not "**" in pathscombined:
+        abort(404)
 
     paths=pathscombined.split("**")
 
@@ -327,5 +339,3 @@ if __name__ == '__main__':
         pass
 
     app.run(host=opts.host, port=opts.port, threaded=True)
-
-
