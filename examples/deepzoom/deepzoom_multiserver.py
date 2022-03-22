@@ -120,8 +120,9 @@ def _removeFormat(astring):
     if len(newstrings)==1:
         return (astring,"unknown")
 
-    for i in range(len(newstrings)-1):
-        mainstring=mainstring+newstrings[i]
+    mainstring=mainstring+".".join(newstrings[:-1])
+    #for i in range(len(newstrings)-1):
+    #    mainstring=mainstring+newstrings[i]
 
     return (mainstring,newstrings[-1])
 
