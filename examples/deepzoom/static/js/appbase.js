@@ -7,7 +7,9 @@ var tmcpoints = {
     fixed: null,
     moving: null,
     fixed_image_width: 0,
-    moving_image_width: 0
+    moving_image_width: 0,
+    slide_mpp1: 1,
+    slide_mpp2: 1
 }
 //This function is called when the document is loaded. the tmcpoints object is built as an "app" and init is its main function 
 
@@ -32,6 +34,26 @@ tmcpoints.init = function (options) {
     /*tmcpoints.moving_viewer.addHandler("open",function(){
         regionUtils.drawAllRegionsFromProtein("moving");
     })*/
+
+    fixed_viewer.scalebar({
+        pixelsPerMeter: tmcpoints.slide_mpp1 ? (1e6 / tmcpoints.slide_mpp1) : 0,
+        xOffset: 10,
+        yOffset: 10,
+        barThickness: 3,
+        color: '#555555',
+        fontColor: '#333333',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    });
+
+    moving_viewer.scalebar({
+        pixelsPerMeter: tmcpoints.slide_mpp2 ? (1e6 / tmcpoints.slide_mpp2) : 0,
+        xOffset: 10,
+        yOffset: 10,
+        barThickness: 3,
+        color: '#555555',
+        fontColor: '#333333',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    });
 
     if (tmcpoints.fixed_file == null || tmcpoints.moving_file == null) {
         console.log("Chose dzi files to open");

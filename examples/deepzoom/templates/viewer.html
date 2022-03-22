@@ -7,6 +7,7 @@
     <!--OpenSeadragon-->		
     <script src="{{ url_for('static', filename='js/openseadragon/openseadragon.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/openseadragon/openseadragon-svg-overlay.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/openseadragon/openseadragon-scalebar.js') }}"></script>
     <script src="{{ url_for('static', filename='js/utils/interfaceUtils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/utils/JSONUtils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/utils/overlayUtils.js') }}"></script>
@@ -121,6 +122,9 @@
             //var image2=varshere['image2'].replace(/\W/g, '');
         	tmcpoints.fixed_file ="{{ slide_url1 }}";
         	tmcpoints.moving_file="{{ slide_url2 }}";
+
+            tmcpoints.slide_mpp1 = parseFloat("{{ slide_mpp1 }}");
+            tmcpoints.slide_mpp2 = parseFloat("{{ slide_mpp2 }}");
 
             osdcontext.osdimgurl="{{ url_for('static', filename='js/openseadragonimages/') }}",
 
