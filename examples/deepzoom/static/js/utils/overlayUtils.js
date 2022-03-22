@@ -1,10 +1,8 @@
-overlayUtils={};
-
-overlayUtils.TMCPCount = {"fixed":1,"moving":1},
-
-overlayUtils._drawRegions = false,
-
-overlayUtils._singleTMCPD3Groups =  {"fixed":null,"moving":null},
+overlayUtils={
+    TMCPCount: {"fixed":1,"moving":1},
+    _drawRegions: false,
+    _singleTMCPD3Groups:  {"fixed":null,"moving":null}
+}
 
 overlayUtils.drawSingleTMCP =  function(overlay,options){    
     options.imageWidth=overlayUtils.OSDimageWidth(overlay);
@@ -67,8 +65,8 @@ overlayUtils.objectToTransform= function(tobj){
 
 overlayUtils.addTrackingToDOMElement= function(node,overlay) {
     new OpenSeadragon.MouseTracker({
-        element= node,
-        dragHandler= function(event) {
+        element:node,
+        dragHandler:function(event) {
             var viewportDelta=overlayUtils.viewportDelta(event.delta,overlay); 
             var d3node=d3.select(node);
             var transformobj=overlayUtils.transformToObject(d3node.attr("transform"));
@@ -98,7 +96,7 @@ overlayUtils.addTrackingToDOMElement= function(node,overlay) {
                 var color=d3node.select("path").attr("stroke");
                 //console.log(id);
                 regionUtils.removePoly(id,overlay);
-        var regionid=overlay+id.toString();
+                var regionid=overlay+id.toString();
                 var newpoints=[]//apend arrays of 2 values
                 d3.selectAll(".regionp-"+id+".TMCP-"+overlay)["_groups"][0].forEach(function(TMCP){
                     var transform=overlayUtils.transformToObject(d3.select(TMCP).attr("transform"));                        
@@ -108,7 +106,7 @@ overlayUtils.addTrackingToDOMElement= function(node,overlay) {
                 });
                 //var canvas=tmcpoints[overlay+"_svgov"].node();
                 //var drawingclass="regionpolygr regionpolygr-"+id+" "+overlay;
-        var regiongr=d3.select('.regionpolygr.'+regionid);
+                var regiongr=d3.select('.regionpolygr.'+regionid);
                 //var regiongr=d3.select("."+overlay+".regionpolygr-"+id);
         
                 
@@ -130,10 +128,14 @@ overlayUtils.addTrackingToDOMElement= function(node,overlay) {
                 }
                 //regionUtils._regionD3Groups[overlay].select('regionpoly-'+id).remove();
             } else if(!d3node.classed("regionp")){
+                //if it is not region it's point
                 var htmlid=d3node.attr("id");
                 //console.log(htmlid);
                 var transformobj=overlayUtils.transformToObject(d3node.attr("transform"));
-                markerUtils._TMCPS[overlay][htmlid]={"x":Number(transformobj.translate[0]),"y":Number(transformobj.translate[1])};
+                //that weird bug was here:
+                //markerUtils._TMCPS[overlay][htmlid]={"x":Number(transformobj.translate[0]),"y":Number(transformobj.translate[1])};
+                markerUtils.modifyPoint({"overlay":overlay,"htmlid":htmlid,
+                    "x":Number(transformobj.translate[0]),"y":Number(transformobj.translate[1])});
             }
         },
         clickHandler: function(event){
