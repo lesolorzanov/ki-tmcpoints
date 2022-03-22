@@ -54,6 +54,7 @@ markerUtils.TMCP = function(element,options){
 		});
 	}
 	
+
 	if(options.saveToTMCPS){
 		markerUtils._TMCPS[overlay]["TMCP-"+overlay+"-"+tmcpid]={"vx":x,"vy":y,
 		"gx":gx,"gy":gy,"id":tmcpid,"color":strokeColor};
@@ -64,4 +65,40 @@ markerUtils.TMCP = function(element,options){
 	});
 
 	return {"strokeColor":strokeColor,"radius":radius,"strokeWidth":strokeWidth,"id":tmcpid };
+}
+
+markerUtils.modifyPoint= function(options){
+
+	if(!options.hasOwnProperty('overlay')){
+		console.log("can't modify point if I don't know which overlay it is");
+		return;
+	}
+
+	var overlay=options.overlay;
+
+	if(!options.hasOwnProperty('htmlid')){
+		console.log("can't modify point if I don't know which id it is");
+		return;
+	}
+
+	var htmlid=options.htmlid;
+
+	//var drawText = options.drawText || markerUtils._TMCPStyle.drawText;
+	var imageWidth=options.imageWidth || overlayUtils.OSDimageWidth(overlay);
+	var htmlid=options.htmlid;
+	//var strokeWidth=options.strokeWidth || markerUtils._TMCPStyle.strokeWidth; strokeWidth/=imageWidth/10;
+	//var radius=options.radius || markerUtils._TMCPStyle.radius; radius/=imageWidth;
+	var strokeColor=options.strokeColor || overlayUtils.randomColor();
+	//var extraClass=options.extraClass || null;
+	var x = options.x || null;
+	var y = options.y || null;
+	var gx =options.gx || x*imageWidth;""
+	var gy =options.gy || y*imageWidth;
+
+	markerUtils._TMCPS[overlay][htmlid]["vx"]=x
+	markerUtils._TMCPS[overlay][htmlid]["vy"]=y
+	markerUtils._TMCPS[overlay][htmlid]["gx"]=gx
+	markerUtils._TMCPS[overlay][htmlid]["gy"]=gy
+	
+
 }
