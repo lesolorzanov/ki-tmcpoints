@@ -48,7 +48,7 @@ JSONUtils.dataToJSON = function () {
  * Save the data from a hiden <a> tag into a json file containing the locations of the points.
  */
 JSONUtils.downloadJSON = function () {
-    var a = document.getElementById("hiddena");
+    //var a = document.getElementById("hiddena");
     var a = document.createElement("a");
     var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(JSONUtils.dataToJSON(), 0, 4));
     var namefile="";
@@ -72,21 +72,7 @@ JSONUtils.downloadJSON = function () {
     a.setAttribute('display', 'none');
     a.click();
 }
-/**
- * @function
- * Fill the text area with the points JSON, be it current points in display or the imported points
- * @param {Object} jsonpoints - JSON obejct to stringify
- */
-JSONUtils.setJSONString = function (jsonpoints) {
-    var ta = document.getElementById('jsonpoints');
-    ta.className = "form-control";
 
-    if (jsonpoints) {
-        ta.value = JSON.stringify(jsonpoints);
-    } else {
-        ta.value = JSON.stringify(JSONUtils.pointsToJSON(), 0, 4);
-    }
-}
 /**
  * @function 
  * Read text area and create all the 
