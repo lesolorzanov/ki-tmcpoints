@@ -1,6 +1,6 @@
 markerUtils={}
 
-markerUtils._TMCPStyle={ strokeWidth: 20, radius: 9, drawText:true, textSize:1 };
+markerUtils._TMCPStyle={ strokeWidth: 10, radius: 3, drawText:true, textSize:1 };
 
 markerUtils._TMCPS={"fixed":{},"moving":{}};
 
@@ -46,7 +46,7 @@ markerUtils.TMCP = function(element,options){
 		var text = elemEnter
 		.append("text").style("fill", "blue").style("stroke", "white").style("stroke-width", 0.004)
 		.style("font-size", "1%").attr("text-anchor", "middle")
-		.attr( 'transform','translate(0,0.010) scale('+(markerUtils._TMCPStyle.textSize/20).toString()+ ')')
+		.attr( 'transform','translate(0,0.010) scale('+(markerUtils._TMCPStyle.textSize/20).toString()+ ') rotate('+(360 - tmcpoints[overlay+'_viewer'].viewport.getRotation()).toString()+')')
 		.text(function(){
 			var toreturn=String(tmcpid); 
 			overlayUtils.TMCPCount[overlay]+=1; 
@@ -54,7 +54,6 @@ markerUtils.TMCP = function(element,options){
 		});
 	}
 	
-
 	if(options.saveToTMCPS){
 		markerUtils._TMCPS[overlay]["TMCP-"+overlay+"-"+tmcpid]={"vx":x,"vy":y,
 		"gx":gx,"gy":gy,"id":tmcpid,"color":strokeColor};
