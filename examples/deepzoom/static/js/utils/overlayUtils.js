@@ -187,21 +187,69 @@ overlayUtils.viewportDelta= function(eventdelta,overlay){
     }      
 };
 
+
+overlayUtils.imagePointFToImagePointM= function(imagePointF){
+    // approximates a sensible location for the matching point in moving image given point in fixed image
+
+    // get moving and fixed image sizes
+    const fixedSize = {"x":tmcpoints.fixed_viewer.world.getItemAt(0).getContentSize().x, "y":tmcpoints.fixed_viewer.world.getItemAt(0).getContentSize().y}
+    const movingSize = {"x":tmcpoints.moving_viewer.world.getItemAt(0).getContentSize().x, "y":tmcpoints.moving_viewer.world.getItemAt(0).getContentSize().y}
+
+    // find relative location of imagePointF
+    const relativeF = {"x":imagePointF.x / fixedSize.x, "y":imagePointF.y / fixedSize.y}
+
+    // insert point into the same relative location in moving image
+    var imagePointM = new OpenSeadragon.Point(0, 0)
+    rot = tmcpoints.moving_viewer.viewport.getRotation()
+    if (rot == 90) {
+        imagePointM.x = movingSize.x * relativeF.y
+        imagePointM.y = movingSize.y * (1.0 - relativeF.x)
+    } else if (rot == 180) {
+        imagePointM.x = movingSize.x * (1.0 - relativeF.x)
+        imagePointM.y = movingSize.y * (1.0 - relativeF.y)
+    } else if (rot == 270) {
+        imagePointM.x = movingSize.x * (1.0 - relativeF.y)
+        imagePointM.y = movingSize.y * relativeF.x
+    } else {
+        imagePointM.x = movingSize.x * relativeF.x
+        imagePointM.y = movingSize.y * relativeF.y
+    }
+
+    return imagePointM
+}
+
+//overlayUtils.addTMCPtoViewers= function(event){
+//    // The canvas-click event gives us a position in web coordinates.
+//    //The event position is relative to OSD viewer 
+//    // Convert that to viewport coordinates, the lingua franca of OpenSeadragon coordinates.
+//    var normalizedPointF=overlayUtils.pointFromOSDPixel( event.position, "fixed" );
+//    //draw in the fixed viewer, now we need to convert it to pixels and then to the moving space viewport to put there 
+//    var optionsF=overlayUtils.drawSingleTMCP("fixed",{"saveToTMCPS":true,"x":normalizedPointF.x,"y":normalizedPointF.y});
+//    //get the pixel coordinates in fixed image 
+//    var imagePointF = overlayUtils.pointToImage(normalizedPointF,"fixed");
+//    //get this pixel in moving normal space
+//    var normalizedPointM=overlayUtils.imageToViewport( imagePointF, "moving" );
+//    //draw in the correct position in moving space
+//    var optionsM=overlayUtils.drawSingleTMCP("moving",{"saveToTMCPS":true,"x":normalizedPointM.x,"y":normalizedPointM.y,"strokeColor":optionsF.strokeColor}); 
+//    overlayUtils.addRowToTable("tmcptablebody",optionsF.id,imagePointF.x,imagePointF.y,imagePointF.x,imagePointF.y);
+//};
+
 overlayUtils.addTMCPtoViewers= function(event){
     // The canvas-click event gives us a position in web coordinates.
-    //The evnet position is relative to OSD viewer 
+    //The event position is relative to OSD viewer 
     // Convert that to viewport coordinates, the lingua franca of OpenSeadragon coordinates.
     var normalizedPointF=overlayUtils.pointFromOSDPixel( event.position, "fixed" );
     //draw in the fixed viewer, now we need to convert it to pixels and then to the moving space viewport to put there 
     var optionsF=overlayUtils.drawSingleTMCP("fixed",{"saveToTMCPS":true,"x":normalizedPointF.x,"y":normalizedPointF.y});
     //get the pixel coordinates in fixed image 
     var imagePointF = overlayUtils.pointToImage(normalizedPointF,"fixed");
-    //get this pixel in moving normal space
-    var normalizedPointM=overlayUtils.imageToViewport( imagePointF, "moving" );
+    // approximate a sensible location for the corresponding point in moving image given point in fixed image
+    var imagePointM = overlayUtils.imagePointFToImagePointM(imagePointF)
+    // convert that to viewport coordinates
+    var normalizedPointM=overlayUtils.imageToViewport( imagePointM, "moving" );
     //draw in the correct position in moving space
-    var optionsM=overlayUtils.drawSingleTMCP("moving",
-        {"saveToTMCPS":true,"x":normalizedPointM.x,"y":normalizedPointM.y,"strokeColor":optionsF.strokeColor}); 
-    overlayUtils.addRowToTable("tmcptablebody",optionsF.id,imagePointF.x,imagePointF.y,imagePointF.x,imagePointF.y);
+    var optionsM=overlayUtils.drawSingleTMCP("moving",{"saveToTMCPS":true,"x":normalizedPointM.x,"y":normalizedPointM.y,"strokeColor":optionsF.strokeColor}); 
+    overlayUtils.addRowToTable("tmcptablebody",optionsF.id,imagePointF.x,imagePointF.y,imagePointM.x,imagePointM.y);
 };
 
 /** @function getMatchingPointsFromClickFixed takes an evnet happening in the fixed viewer

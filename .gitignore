@@ -12,3 +12,4 @@ examples/deepzoom/.vscode/launch.json
 newimgs
 .vscode/launch.json
 images
+*.swp
