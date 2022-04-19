@@ -1,0 +1,5 @@
+#!/usr/bin/env bash 
+
+source activate deepzoom-oslide
+
+python examples/deepzoom/deepzoom_multiserver.py --port 3000
