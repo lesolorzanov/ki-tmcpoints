@@ -116,37 +116,38 @@
     
     // ----------
     $(document).ready(function() {
-	    //varshere=getUrlVars();
-        //if(varshere.hasOwnProperty('image1') && varshere.hasOwnProperty('image2')){
-            //var image1=varshere['image1'].replace(/\W/g, '');
-            //var image2=varshere['image2'].replace(/\W/g, '');
-        	tmcpoints.fixed_file ="{{ slide_url1 }}";
-        	tmcpoints.moving_file="{{ slide_url2 }}";
+        tmcpoints.fixed_file ="{{ slide_url1 }}";
+        tmcpoints.moving_file="{{ slide_url2 }}";
 
-            tmcpoints.slide_mpp1 = parseFloat("{{ slide_mpp1 }}");
-            tmcpoints.slide_mpp2 = parseFloat("{{ slide_mpp2 }}");
+        tmcpoints.slide_mpp1 = parseFloat("{{ slide_mpp1 }}");
+        tmcpoints.slide_mpp2 = parseFloat("{{ slide_mpp2 }}");
 
-            osdcontext.osdimgurl="{{ url_for('static', filename='js/openseadragonimages/') }}",
+        osdcontext.osdimgurl="{{ url_for('static', filename='js/openseadragonimages/') }}",
 
-            console.log(tmcpoints.fixed_file ,tmcpoints.moving_file, "ready to init")
-        	tmcpoints.init();
-            var names1=tmcpoints.fixed_file.split("/");
-            var names2=tmcpoints.moving_file.split("/");
+        //console.log(tmcpoints.fixed_file ,tmcpoints.moving_file, "ready to init")
+       	tmcpoints.init();
+        var names1=tmcpoints.fixed_file.split("/");
+        var names2=tmcpoints.moving_file.split("/");
 
-            var name1="No name", name2="No name";
+        var name1="No name", name2="No name";
 
-            var li1=names1.length;
-            var li2=names2.length;
-            if(names1[li1-1].length==0 && li1 >=2)
-                name1=names1[li-2];
-            if(names2[li2-2].length==0 && li2 >=2)
-                name2=names2[li-2];
-                
-			document.getElementById("img1name").innerText="{{ slide_filename1.split('/')[-1] }}";
-			document.getElementById("img2name").innerText="{{ slide_filename2.split('/')[-1] }}";
-	    	document.getElementById("thimg1").innerText="{{ slide_filename1.split('/')[-1] }}";
-			document.getElementById("thimg2").innerText="{{ slide_filename2.split('/')[-1] }}";
-		//}else{alert("Select images to display")}
+        var li1=names1.length;
+        var li2=names2.length;
+        /*if(names1[li1-1].length==0 && li1 >=2)
+            name1=names1[li1-2];
+        if(names2[li2-1].length==0 && li2 >=2)
+            name2=names2[li2-2];
+               console.log(name1,name2,names1,names2); 
+	*/
+	name1=names1[li1-1];
+	name2=names2[li2-1];
+	name1=name1.replace(".dzi","")
+	name2=name2.replace(".dzi","")
+	document.getElementById("img1name").innerText=name1;//"{{ slide_filename1.split('/')[-1] }}";
+	document.getElementById("img2name").innerText=name2;//"{{ slide_filename2.split('/')[-1] }}";
+	document.getElementById("thimg1").innerText=  name1;// "{{ slide_filename1.split('/')[-1] }}";
+	document.getElementById("thimg2").innerText=  name2;// "{{ slide_filename2.split('/')[-1] }}";
+	//}else{alert("Select images to display")}
 
     });
     
