@@ -1,4 +1,4 @@
-var osdcontext={osdimgurl:""};
+var osdcontext={osdimgurl:"static/images/"};
 
 var tmcpoints = {
     url_prefix:"",
@@ -115,7 +115,7 @@ tmcpoints.init = function (options) {
     //document.getElementById('pointstojson').addEventListener('click', JSONUtils.downloadJSON);
     //Function to button
     //document.getElementById('jsontopoints').addEventListener('click', JSONUtils.importPointsFromJSON);
-    interfaceUtils.listen("jsontodata","click", JSONUtils.readJSONToData);
+    interfaceUtils.listen("jsontodata","click",JSONUtils.readJSONToData);
     //interfaceUtils.listen("drawregions_btn","click",regionUtils.regionsOnOff);
   
 
@@ -154,5 +154,7 @@ tmcpoints.options_moving = {
     zoomPerClick: 1.0,
     constrainDuringPan: true,
     visibilityRatio: 1,
-    showNavigationControl: false
+    showNavigationControl: true,
+    degrees: 0,
+    showRotationControl: true
 }
