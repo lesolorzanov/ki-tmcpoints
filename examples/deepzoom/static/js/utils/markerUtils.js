@@ -4,6 +4,11 @@ markerUtils._TMCPStyle={ strokeWidth: 10, radius: 3, drawText:true, textSize:1 }
 
 markerUtils._TMCPS={"fixed":{},"moving":{}};
 
+
+markerUtils.getPoints = function(){
+    return markerUtils._TMCPS
+}
+
 markerUtils.TMCP = function(element,options){
 	var overlay = options.overlay || "fixed";
 	var drawText = options.drawText || markerUtils._TMCPStyle.drawText;

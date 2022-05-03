@@ -189,30 +189,68 @@ overlayUtils.viewportDelta= function(eventdelta,overlay){
 
 
 overlayUtils.imagePointFToImagePointM= function(imagePointF){
-    // approximates a sensible location for the matching point in moving image given point in fixed image
+    // approximates a sensible location for the matching point in moving image
+    // If there are no points, uses the same distance ratios from images edges for the moving point as for the fixed point
+    // If there are already at least one point, use the offset between previous fixed point and new fixed point to guess location for the new moving point
+
+    var points = markerUtils.getPoints()
+    var numPoints = Object.keys(points.fixed).length
 
     // get moving and fixed image sizes
     const fixedSize = {"x":tmcpoints.fixed_viewer.world.getItemAt(0).getContentSize().x, "y":tmcpoints.fixed_viewer.world.getItemAt(0).getContentSize().y}
     const movingSize = {"x":tmcpoints.moving_viewer.world.getItemAt(0).getContentSize().x, "y":tmcpoints.moving_viewer.world.getItemAt(0).getContentSize().y}
 
-    // find relative location of imagePointF
-    const relativeF = {"x":imagePointF.x / fixedSize.x, "y":imagePointF.y / fixedSize.y}
-
-    // insert point into the same relative location in moving image
     var imagePointM = new OpenSeadragon.Point(0, 0)
-    rot = tmcpoints.moving_viewer.viewport.getRotation()
-    if (rot == 90) {
-        imagePointM.x = movingSize.x * relativeF.y
-        imagePointM.y = movingSize.y * (1.0 - relativeF.x)
-    } else if (rot == 180) {
-        imagePointM.x = movingSize.x * (1.0 - relativeF.x)
-        imagePointM.y = movingSize.y * (1.0 - relativeF.y)
-    } else if (rot == 270) {
-        imagePointM.x = movingSize.x * (1.0 - relativeF.y)
-        imagePointM.y = movingSize.y * relativeF.x
+
+    // if no points are set yet, use the logic below. Otherwise use offest of the last fixed and moving points to approximate location for the new point
+    if (numPoints > 1) {
+
+        prevPointF = points.fixed["TMCP-fixed-"+(numPoints-1).toString()]
+        prevPointM = points.moving["TMCP-moving-"+(numPoints-1).toString()]
+
+        // const offset = {"x": imagePointF["x"] - prevPointF["gx"], "y": imagePointF["y"] - prevPointF["gy"]}
+        // // relative offset
+        const offset = {"x": (imagePointF["x"] - prevPointF["gx"]) / fixedSize.x, "y": (imagePointF["y"] - prevPointF["gy"]) / fixedSize.y}
+
+        // insert point into the same relative location in moving image
+        rot = tmcpoints.moving_viewer.viewport.getRotation()
+        if (rot == 90) {
+            imagePointM.x = prevPointM.gx + (movingSize.x * offset.y)
+            imagePointM.y = prevPointM.gy - (movingSize.y * offset.x)
+        } else if (rot == 180) {
+            // make offset relative
+            imagePointM.x = prevPointM.gx - (movingSize.x * offset.x)
+            imagePointM.y = prevPointM.gy - (movingSize.y * offset.x)
+        } else if (rot == 270) {
+            imagePointM.x = prevPointM.gx - (movingSize.x * offset.y)
+            imagePointM.y = prevPointM.gy + (movingSize.y * offset.x)
+        } else {
+            imagePointM.x = prevPointM.gx + (movingSize.x * offset.x)
+            imagePointM.y = prevPointM.gy + (movingSize.y * offset.y)
+        }
+
+
     } else {
-        imagePointM.x = movingSize.x * relativeF.x
-        imagePointM.y = movingSize.y * relativeF.y
+
+        // find relative location of imagePointF
+        const relativeF = {"x":imagePointF.x / fixedSize.x, "y":imagePointF.y / fixedSize.y}
+
+        // insert point into the same relative location in moving image
+        rot = tmcpoints.moving_viewer.viewport.getRotation()
+        if (rot == 90) {
+            imagePointM.x = movingSize.x * relativeF.y
+            imagePointM.y = movingSize.y * (1.0 - relativeF.x)
+        } else if (rot == 180) {
+            imagePointM.x = movingSize.x * (1.0 - relativeF.x)
+            imagePointM.y = movingSize.y * (1.0 - relativeF.y)
+        } else if (rot == 270) {
+            imagePointM.x = movingSize.x * (1.0 - relativeF.y)
+            imagePointM.y = movingSize.y * relativeF.x
+        } else {
+            imagePointM.x = movingSize.x * relativeF.x
+            imagePointM.y = movingSize.y * relativeF.y
+        }
+
     }
 
     return imagePointM
