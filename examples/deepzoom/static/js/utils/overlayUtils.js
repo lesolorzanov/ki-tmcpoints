@@ -253,6 +253,22 @@ overlayUtils.imagePointFToImagePointM= function(imagePointF){
 
     }
 
+    // make sure imagePointM is within the image (and add a margin)
+    const margin = 1000
+    if (imagePointM.x > movingSize.x - margin) {
+        imagePointM.x = movingSize.x - margin
+    }
+    else if (imagePointM.x < margin) {
+        imagePointM.x = margin
+    }
+
+    if (imagePointM.y > movingSize.y - margin) {
+        imagePointM.y = movingSize.y - margin
+    }
+    else if (imagePointM.y < margin) {
+        imagePointM.y = margin
+    }
+
     return imagePointM
 }
 
