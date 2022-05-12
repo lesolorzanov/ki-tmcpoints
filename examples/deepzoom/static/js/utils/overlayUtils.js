@@ -203,7 +203,11 @@ overlayUtils.imagePointFToImagePointM= function(imagePointF){
     var imagePointM = new OpenSeadragon.Point(0, 0)
 
     // if no points are set yet, use the logic below. Otherwise use offest of the last fixed and moving points to approximate location for the new point
-    if (numPoints > 1) {
+    if (false /*numPoints > 1*/ ) {
+        //sometimes the prevPointM does not yet exist,
+        //this might be also due to a problem with 0 and 1 indexing.
+        //Long ago I had to draw points from 1 for no good reason (user request)
+        //so it affected the rest. I think it works now but this part had to be removed
 
         prevPointF = points.fixed["TMCP-fixed-"+(numPoints-1).toString()]
         prevPointM = points.moving["TMCP-moving-"+(numPoints-1).toString()]
