@@ -202,8 +202,12 @@ overlayUtils.imagePointFToImagePointM= function(imagePointF){
 
     var imagePointM = new OpenSeadragon.Point(0, 0)
 
-    // if no points are set yet, use the logic below. Otherwise use offest of the last fixed and moving points to approximate location for the new point
+    // if no points are set yet, use the logic below. Otherwise use offset of the last fixed and moving points to approximate location for the new point
     if (numPoints > 1) {
+        //sometimes the prevPointM does not yet exist,
+        //this might be also due to a problem with 0 and 1 indexing.
+        //Long ago I had to draw points from 1 for no good reason (user request)
+        //so it affected the rest. I think it works now but this part had to be removed
 
         prevPointF = points.fixed["TMCP-fixed-"+(numPoints-1).toString()]
         prevPointM = points.moving["TMCP-moving-"+(numPoints-1).toString()]
@@ -288,6 +292,26 @@ overlayUtils.imagePointFToImagePointM= function(imagePointF){
 //    overlayUtils.addRowToTable("tmcptablebody",optionsF.id,imagePointF.x,imagePointF.y,imagePointF.x,imagePointF.y);
 //};
 
+//// VERSION 2 - Approximate new point locations from previous points. This causes unpleasant bugs.
+//overlayUtils.addTMCPtoViewers= function(event){
+//    // The canvas-click event gives us a position in web coordinates.
+//    //The event position is relative to OSD viewer 
+//    // Convert that to viewport coordinates, the lingua franca of OpenSeadragon coordinates.
+//    var normalizedPointF=overlayUtils.pointFromOSDPixel( event.position, "fixed" );
+//    //draw in the fixed viewer, now we need to convert it to pixels and then to the moving space viewport to put there 
+//    var optionsF=overlayUtils.drawSingleTMCP("fixed",{"saveToTMCPS":true,"x":normalizedPointF.x,"y":normalizedPointF.y});
+//    //get the pixel coordinates in fixed image 
+//    var imagePointF = overlayUtils.pointToImage(normalizedPointF,"fixed");
+//    // approximate a sensible location for the corresponding point in moving image given point in fixed image
+//    var imagePointM = overlayUtils.imagePointFToImagePointM(imagePointF)
+//    // convert that to viewport coordinates
+//    var normalizedPointM=overlayUtils.imageToViewport( imagePointM, "moving" );
+//    //draw in the correct position in moving space
+//    var optionsM=overlayUtils.drawSingleTMCP("moving",{"saveToTMCPS":true,"x":normalizedPointM.x,"y":normalizedPointM.y,"strokeColor":optionsF.strokeColor}); 
+//    overlayUtils.addRowToTable("tmcptablebody",optionsF.id,imagePointF.x,imagePointF.y,imagePointM.x,imagePointM.y);
+//};
+
+// VESRION 3 - Set moving point to the middle of the view
 overlayUtils.addTMCPtoViewers= function(event){
     // The canvas-click event gives us a position in web coordinates.
     //The event position is relative to OSD viewer 
@@ -297,10 +321,15 @@ overlayUtils.addTMCPtoViewers= function(event){
     var optionsF=overlayUtils.drawSingleTMCP("fixed",{"saveToTMCPS":true,"x":normalizedPointF.x,"y":normalizedPointF.y});
     //get the pixel coordinates in fixed image 
     var imagePointF = overlayUtils.pointToImage(normalizedPointF,"fixed");
-    // approximate a sensible location for the corresponding point in moving image given point in fixed image
-    var imagePointM = overlayUtils.imagePointFToImagePointM(imagePointF)
-    // convert that to viewport coordinates
-    var normalizedPointM=overlayUtils.imageToViewport( imagePointM, "moving" );
+
+    // console.log(tmcpoints["fixed_viewer"].viewport.getBounds())
+    boundsF = tmcpoints["fixed_viewer"].viewport.getBounds()
+    boundsM = tmcpoints["moving_viewer"].viewport.getBounds()
+
+    var normalizedPointM={"x": boundsM.x + boundsM.width / 2, "y": boundsM.y + boundsM.height / 2}
+
+    var imagePointM = overlayUtils.pointToImage(normalizedPointM,"moving");
+
     //draw in the correct position in moving space
     var optionsM=overlayUtils.drawSingleTMCP("moving",{"saveToTMCPS":true,"x":normalizedPointM.x,"y":normalizedPointM.y,"strokeColor":optionsF.strokeColor}); 
     overlayUtils.addRowToTable("tmcptablebody",optionsF.id,imagePointF.x,imagePointF.y,imagePointM.x,imagePointM.y);
