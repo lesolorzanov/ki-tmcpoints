@@ -172,10 +172,17 @@ overlayUtils.addRowToTable= function(tableid,id,x1,y1,x2,y2){
     gobutton.addEventListener("click", function(event){
         //get viewer coords of desired point to pan to it. Don't complicat with zoom, just pan to it
         console.log(event);
-        TMCPid=event.target.id.replace("go-button-","TMCP-moving-");
-        apoint=markerUtils._TMCPS.moving[TMCPid];
-        panto={x:apoint.vx, y:apoint.vy};
-        tmcpoints.moving_viewer.viewport.panTo(panto);
+        //moving
+        TMCPmid=event.target.id.replace("go-button-","TMCP-moving-");
+        apointm=markerUtils._TMCPS.moving[TMCPmid];
+        pantom={x:apointm.vx, y:apointm.vy};
+        tmcpoints.moving_viewer.viewport.panTo(pantom);
+
+        //fixed I guess has to be done too haha
+        TMCPfid=event.target.id.replace("go-button-","TMCP-fixed-");
+        apointf=markerUtils._TMCPS.fixed[TMCPfid];
+        pantof={x:apointf.vx, y:apointf.vy};
+        tmcpoints.fixed_viewer.viewport.panTo(pantof);
     });
 
     checkme=document.createElement("input"); 
