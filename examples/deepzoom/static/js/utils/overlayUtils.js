@@ -156,10 +156,37 @@ overlayUtils.addRowToTable= function(tableid,id,x1,y1,x2,y2){
     var cell1=row.insertCell(0);
     var cell2=row.insertCell(1);
     var cell3=row.insertCell(2);
+    var cell4=row.insertCell(3);
+    var cell5=row.insertCell(4);
     
     cell1.textContent= id;
     cell2.id="cell-fixed-"+id; cell2.textContent= "("+Math.floor(x1)+", "+ Math.floor(y1)+")";
     cell3.id="cell-moving-"+id; cell3.textContent= "("+Math.floor(x2)+", "+ Math.floor(y2)+")";
+    cell4.id="cell-gobutton"+id; 
+
+    gobutton=document.createElement("button");    
+    gobutton.id="go-button-"+id;
+    gobutton.classList.add("btn","btn-primary");
+    gobutton.setAttribute("type","button");
+    gobutton.innerText="Go"
+    gobutton.addEventListener("click", function(event){
+        //get viewer coords of desired point to pan to it. Don't complicat with zoom, just pan to it
+        console.log(event);
+        TMCPid=event.target.id.replace("go-button-","TMCP-moving-");
+        apoint=markerUtils._TMCPS.moving[TMCPid];
+        panto={x:apoint.vx, y:apoint.vy};
+        tmcpoints.moving_viewer.viewport.panTo(panto);
+    });
+
+    checkme=document.createElement("input"); 
+    //checkme.id="go-button-"+id;
+    checkme.classList.add("form-check-input");
+    checkme.setAttribute("type","checkbox");
+
+    cell4.appendChild(gobutton);
+    cell5.appendChild(checkme);
+
+
     
 };
 

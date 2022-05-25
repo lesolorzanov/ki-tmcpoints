@@ -45,6 +45,7 @@ markerUtils.TMCP = function(element,options){
 	var circle=elemEnter
 	.append("path")
 		.attr( "d", d3.symbol().size(radius/25).type(d3.symbolCircle))
+		.attr("transform", "rotate(45)")
 		.attr('stroke-width',strokeWidth/2)
 		.attr('stroke', "gray").style("fill","transparent" );
 	if(drawText){
