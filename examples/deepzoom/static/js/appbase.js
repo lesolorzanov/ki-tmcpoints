@@ -74,6 +74,7 @@ tmcpoints.init = function (options) {
         if (event.quick) {
             if (!overlayUtils._drawRegions) {
                 overlayUtils.addTMCPtoViewers(event);
+
                 //console.log("Drawing points is temporarily disabled. Only regions can be drawn");
             } else {
                 //call region creator and drawer
@@ -88,7 +89,7 @@ tmcpoints.init = function (options) {
             if (document.getElementById("syncpan").checked) {
                 var f_center = fixed_viewer.viewport.getCenter();
                 moving_viewer.viewport.panTo(f_center, true);
-                //console.log("else");
+                //console.log(event);
             }
         }
     };

@@ -69,7 +69,7 @@ overlayUtils.addTrackingToDOMElement= function(node,overlay) {
         dragHandler:function(event) {
             var viewportDelta=overlayUtils.viewportDelta(event.delta,overlay); 
             var d3node=d3.select(node);
-            console.log(node)
+            console.log(nodetable)
             var transformobj=overlayUtils.transformToObject(d3node.attr("transform"));
 
             transformobj.translate[0]=Number(transformobj.translate[0])+Number(viewportDelta.x);
@@ -116,11 +116,13 @@ overlayUtils.addRowToTable= function(tableid,id,x1,y1,x2,y2){
     var cell3=row.insertCell(2);
     var cell4=row.insertCell(3);
     var cell5=row.insertCell(4);
+    var cell6=row.insertCell(5);
     
     cell1.textContent= id;
     cell2.id="cell-fixed-"+id; cell2.textContent= "("+Math.floor(x1)+", "+ Math.floor(y1)+")";
     cell3.id="cell-moving-"+id; cell3.textContent= "("+Math.floor(x2)+", "+ Math.floor(y2)+")";
     cell4.id="cell-gobutton"+id; 
+    cell6.id="cell-visibility"+id; 
 
     gobutton=document.createElement("button");    
     gobutton.id="go-button-"+id;
@@ -149,7 +151,37 @@ overlayUtils.addRowToTable= function(tableid,id,x1,y1,x2,y2){
     checkme.setAttribute("type","checkbox");
 
     cell4.appendChild(gobutton);
-    cell5.appendChild(checkme);
+    cell6.appendChild(checkme);
+
+
+    visibilitybutton=document.createElement("button");    
+    visibilitybutton.id="visibility-button-"+id;
+    visibilitybutton.classList.add("btn","btn-primary");
+    visibilitybutton.setAttribute("type","button");
+    visibilitybutton.innerHTML="&#128065;"
+    visibilitybutton.addEventListener("click", function(event){
+        //get viewer coords of desired point to pan to it. Don't complicat with zoom, just pan to it
+        //console.log(event);
+        //moving
+        TMCPmid=event.target.id.replace("visibility-button-","TMCP-moving-");
+        domTMCPmid=interfaceUtils.getElementById(TMCPmid);
+        if(domTMCPmid.style.visibility.length==0){
+            domTMCPmid.style.visibility="hidden";
+        }else{
+            domTMCPmid.style.visibility="";
+        }
+        //fixed I guess has to be done too haha
+        TMCPfid=event.target.id.replace("visibility-button-","TMCP-fixed-");
+        domTMCPfid=interfaceUtils.getElementById(TMCPfid);
+        if(domTMCPfid.style.visibility.length==0){
+            domTMCPfid.style.visibility="hidden";
+        }else{
+            domTMCPfid.style.visibility="";
+        }
+    });
+
+    cell5.appendChild(visibilitybutton);
+
 
 
     
