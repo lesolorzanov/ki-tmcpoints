@@ -210,20 +210,19 @@ overlayUtils.addRowToTable= function(tableid,id,x1,y1,x2,y2){
         //moving
         TMCPmid=event.target.id.replace("visibility-button-","TMCP-moving-");
         domTMCPmid=interfaceUtils.getElementById(TMCPmid);
-        if(domTMCPmid.style.visibility.length==0){
-            domTMCPmid.style.visibility="hidden";
-            visibilitybutton.classList.remove("btn-primary");
-        }else{
-            domTMCPmid.style.visibility="";
-            visibilitybutton.classList.add("btn-primary");
-        }
-        //fixed I guess has to be done too haha
         TMCPfid=event.target.id.replace("visibility-button-","TMCP-fixed-");
         domTMCPfid=interfaceUtils.getElementById(TMCPfid);
-        if(domTMCPfid.style.visibility.length==0){
+
+        buttontarget=event.target;
+
+        if(domTMCPmid.style.visibility.length==0){
+            domTMCPmid.style.visibility="hidden";
             domTMCPfid.style.visibility="hidden";
+            buttontarget.classList.remove("btn-primary");
         }else{
+            domTMCPmid.style.visibility="";
             domTMCPfid.style.visibility="";
+            buttontarget.classList.add("btn-primary");
         }
     });
 
