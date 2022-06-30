@@ -58,6 +58,9 @@
                             <th class="text-center" >ID</th>
                             <th class="text-center" id="thimg1" >img1</th>
                             <th class="text-center" id="thimg2">img2</th>
+                            <th class="text-center" id="th3"></th>
+                            <th class="text-center" id="th4"></th>
+                            <th class="text-center" id="th5"></th>
                         </tr>
                     </thead>              
                     
@@ -96,6 +99,9 @@
                                 <!--<input style="display: inline" type="checkbox" id="drawmode" > Draw mode ON (EXPERIMENTAL)<br>-->
                                 <button id="drawregions_btn" class="btn btn-secondary" type="button"> Regions </button>
                             </div>
+                            
+                        </div>
+                        <div id="rowformorebuttons" class="row" style="padding: 15px">
                             
                         </div>
                         <div class="row" style="padding: 15px">
@@ -139,6 +145,7 @@
             name2=names2[li2-2];
                console.log(name1,name2,names1,names2); 
 	*/
+    hideandshow=false;
 	name1=names1[li1-1];
 	name2=names2[li2-1];
 	name1=name1.replace(".dzi","")
@@ -147,6 +154,40 @@
 	document.getElementById("img2name").innerText=name2;//"{{ slide_filename2.split('/')[-1] }}";
 	document.getElementById("thimg1").innerText=  name1;// "{{ slide_filename1.split('/')[-1] }}";
 	document.getElementById("thimg2").innerText=  name2;// "{{ slide_filename2.split('/')[-1] }}";
+
+    hideshowallbutton=document.createElement("button");    
+    hideshowallbutton.id="hideshow-button"
+    hideshowallbutton.classList.add("btn","btn-primary");
+    hideshowallbutton.setAttribute("type","button");
+    hideshowallbutton.innerHTML="&#128065;all"
+    hideshowallbutton.addEventListener("click", function(event){
+        hideandshow=!hideandshow;
+        for(r of document.getElementById("tmcptablebody").children){
+            id=r.children[0].innerText;
+            TMCPmid="TMCP-moving-"+id;
+            TMCPfid="TMCP-fixed-"+id;
+            domTMCPmid=interfaceUtils.getElementById(TMCPmid);
+            domTMCPfid=interfaceUtils.getElementById(TMCPfid);
+
+            buttontarget=document.getElementById("visibility-button-"+id);
+
+            if(!hideandshow){
+                domTMCPmid.style.visibility="hidden";
+                domTMCPfid.style.visibility="hidden";
+                buttontarget.classList.remove("btn-primary");
+            }else{
+                domTMCPmid.style.visibility="";
+                domTMCPfid.style.visibility="";
+                buttontarget.classList.add("btn-primary");
+            }
+
+        }
+    });
+
+
+
+    //document.getElementById("th4").appendChild(hideshowallbutton);
+    document.getElementById("rowformorebuttons").appendChild(hideshowallbutton);
 	//}else{alert("Select images to display")}
 
     });
