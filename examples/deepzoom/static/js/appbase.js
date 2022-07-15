@@ -69,12 +69,12 @@ tmcpoints.init = function (options) {
     tmcpoints.fixed_singleTMCPS = d3.select(tmcpoints.fixed_svgov.node()).append('g').attr('class', "fixed singleTMCPS");
     tmcpoints.moving_singleTMCPS = d3.select(tmcpoints.moving_svgov.node()).append('g').attr('class', "moving singleTMCPS");
 
-    //This is the OSD click handler, when the event is quick it triggers the creation of an icon
+    // This is the OSD click handler, when the event is quick it triggers the creation of an icon
     var click_handler = function (event) {
         if (event.quick) {
             if (!overlayUtils._drawRegions) {
-                overlayUtils.addTMCPtoViewers(event);
-
+                // disable adding points by clicking for Annotator 2
+                // overlayUtils.addTMCPtoViewers(event);
                 //console.log("Drawing points is temporarily disabled. Only regions can be drawn");
             } else {
                 //call region creator and drawer

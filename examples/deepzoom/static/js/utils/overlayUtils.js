@@ -67,22 +67,24 @@ overlayUtils.addTrackingToDOMElement= function(node,overlay) {
     new OpenSeadragon.MouseTracker({
         element:node,
         dragHandler:function(event) {
-            var viewportDelta=overlayUtils.viewportDelta(event.delta,overlay); 
-            var d3node=d3.select(node);
-            var transformobj=overlayUtils.transformToObject(d3node.attr("transform"));
+            if (overlay == "moving") {
+                var viewportDelta=overlayUtils.viewportDelta(event.delta,overlay); 
+                var d3node=d3.select(node);
+                var transformobj=overlayUtils.transformToObject(d3node.attr("transform"));
 
-            transformobj.translate[0]=Number(transformobj.translate[0])+Number(viewportDelta.x);
-            transformobj.translate[1]=Number(transformobj.translate[1])+Number(viewportDelta.y);
-            //console.log(transformobj);
-            d3node.attr("transform",overlayUtils.objectToTransform(transformobj));
-            //
-            if(!d3node.classed("regionp")){
-                var id=d3node.attr("id").split("-")[2];
-                var cellid="cell-"+overlay+"-"+id;
-                var cell=document.getElementById(cellid);
-                var OSDPoint=new OpenSeadragon.Point(transformobj.translate[0],transformobj.translate[1]);
-                var pToImageCoords=overlayUtils.pointToImage(OSDPoint,overlay);
-                cell.textContent= "("+Math.floor(pToImageCoords.x)+", "+ Math.floor(pToImageCoords.y)+")";
+                transformobj.translate[0]=Number(transformobj.translate[0])+Number(viewportDelta.x);
+                transformobj.translate[1]=Number(transformobj.translate[1])+Number(viewportDelta.y);
+                //console.log(transformobj);
+                d3node.attr("transform",overlayUtils.objectToTransform(transformobj));
+                //
+                if(!d3node.classed("regionp")){
+                    var id=d3node.attr("id").split("-")[2];
+                    var cellid="cell-"+overlay+"-"+id;
+                    var cell=document.getElementById(cellid);
+                    var OSDPoint=new OpenSeadragon.Point(transformobj.translate[0],transformobj.translate[1]);
+                    var pToImageCoords=overlayUtils.pointToImage(OSDPoint,overlay);
+                    cell.textContent= "("+Math.floor(pToImageCoords.x)+", "+ Math.floor(pToImageCoords.y)+")";
+                }
             }
             
         },
@@ -130,14 +132,18 @@ overlayUtils.addTrackingToDOMElement= function(node,overlay) {
                 //regionUtils._regionD3Groups[overlay].select('regionpoly-'+id).remove();
               
             } else if(!d3node.classed("regionp")){
-                //if it is not region it's point
-                var htmlid=d3node.attr("id");
-                //console.log(htmlid);
-                var transformobj=overlayUtils.transformToObject(d3node.attr("transform"));
-                //that weird bug was here:
-                //markerUtils._TMCPS[overlay][htmlid]={"x":Number(transformobj.translate[0]),"y":Number(transformobj.translate[1])};
-                markerUtils.modifyPoint({"overlay":overlay,"htmlid":htmlid,
-                    "x":Number(transformobj.translate[0]),"y":Number(transformobj.translate[1])});
+                // allow moving points only in moving view for Annotator 2
+                if (overlay == "moving") {
+                    //if it is not region it's point
+                    var htmlid=d3node.attr("id");
+                    //console.log(htmlid);
+                    var transformobj=overlayUtils.transformToObject(d3node.attr("transform"));
+                    //that weird bug was here:
+                    //markerUtils._TMCPS[overlay][htmlid]={"x":Number(transformobj.translate[0]),"y":Number(transformobj.translate[1])};
+
+                    markerUtils.modifyPoint({"overlay":overlay,"htmlid":htmlid,
+                        "x":Number(transformobj.translate[0]),"y":Number(transformobj.translate[1])});
+                }
             }
             
         },
